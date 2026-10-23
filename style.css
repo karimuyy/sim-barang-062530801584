@@ -285,3 +285,23 @@ table th[scope="row"] {
 .kembali a {
   color: #1d4ed8;
 }
+/* ===== HALAMAN LOGIN ===== */
+.halaman-login {
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.halaman-login form {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* ===== INFO OBJEK BARANG ===== */
+.info-barang {
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  color: #1e3a8a;
+}

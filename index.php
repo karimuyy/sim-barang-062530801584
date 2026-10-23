@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION["login"]) || $_SESSION["login"] !== true) {
+    header("Location: login.php");
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -14,11 +21,12 @@
   </header>
 
   <nav>
-    <ul>
-      <li><a href="#inventaris">Data Inventaris</a></li>
-      <li><a href="#form-barang">Tambah Barang</a></li>
-    </ul>
-  </nav>
+  <ul>
+    <li><a href="#inventaris">Data Inventaris</a></li>
+    <li><a href="#form-barang">Tambah Barang</a></li>
+    <li><a href="logout.php">Logout (<?= htmlspecialchars($_SESSION["username"]) ?>)</a></li>
+  </ul>
+</nav>
 
   <main>
 

@@ -1,4 +1,10 @@
 <?php
+session_start();
+if (!isset($_SESSION["login"]) || $_SESSION["login"] !== true) {
+    header("Location: login.php");
+    exit;
+}
+require_once "barang.php";
 // ===== FUNGSI HITUNG TOTAL NILAI ASET =====
 function hitungTotalAset($jumlah, $harga)
 {
@@ -55,6 +61,8 @@ if (count($error) === 0) {
     $sukses = true;
     $namaKategori = $daftarKategori[$idKategori];
     $totalAset = hitungTotalAset($jumlah, $harga);
+
+    $barang = new Barang($kode, $nama, $jumlah);   // BARU
 }
 ?>
 <!DOCTYPE html>
@@ -78,6 +86,7 @@ if (count($error) === 0) {
 
       <?php if ($sukses): ?>
         <p class="pesan-sukses">Data barang berhasil diterima oleh server.</p>
+        <p class="info-barang"><?= htmlspecialchars($barang->tampilkanInfo()) ?></p>
 
         <div class="tabel-wrapper">
           <table>
