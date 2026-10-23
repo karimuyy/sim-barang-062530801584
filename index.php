@@ -4,6 +4,20 @@ if (!isset($_SESSION["login"]) || $_SESSION["login"] !== true) {
     header("Location: login.php");
     exit;
 }
+
+require_once "koneksi.php";
+
+// Ambil data barang beserta nama kategorinya
+$stmt = $pdo->query(
+    "SELECT b.kode_barang, b.nama_barang, k.nama_kategori, b.jumlah, b.kondisi
+     FROM barang b
+     JOIN kategori k ON b.id_kategori = k.id
+     ORDER BY b.id ASC"
+);
+$daftarBarang = $stmt->fetchAll();
+
+// Ambil daftar kategori untuk dropdown di form
+$daftarKategori = $pdo->query("SELECT id, nama_kategori FROM kategori ORDER BY id ASC")->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -21,19 +35,19 @@ if (!isset($_SESSION["login"]) || $_SESSION["login"] !== true) {
   </header>
 
   <nav>
-  <ul>
-    <li><a href="#inventaris">Data Inventaris</a></li>
-    <li><a href="#form-barang">Tambah Barang</a></li>
-    <li><a href="logout.php">Logout (<?= htmlspecialchars($_SESSION["username"]) ?>)</a></li>
-  </ul>
-</nav>
+    <ul>
+      <li><a href="#inventaris">Data Inventaris</a></li>
+      <li><a href="#form-barang">Tambah Barang</a></li>
+      <li><a href="logout.php">Logout (<?= htmlspecialchars($_SESSION["username"]) ?>)</a></li>
+    </ul>
+  </nav>
 
   <main>
 
     <section id="inventaris">
       <h2>Tabel Inventaris Barang</h2>
 
-      <div class="pencarian"> <!-- BARU -->
+      <div class="pencarian">
         <label for="cari">Cari barang</label>
         <input type="search" id="cari" placeholder="Ketik kode, nama, kategori, atau kondisi...">
       </div>
@@ -51,41 +65,15 @@ if (!isset($_SESSION["login"]) || $_SESSION["login"] !== true) {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>BRG-001</td>
-              <td>Proyektor</td>
-              <td>Elektronik</td>
-              <td>5</td>
-              <td>Baik</td>
-            </tr>
-            <tr>
-              <td>BRG-002</td>
-              <td>Komputer Desktop</td>
-              <td>Elektronik</td>
-              <td>30</td>
-              <td>Baik</td>
-            </tr>
-            <tr>
-              <td>BRG-003</td>
-              <td>Kursi Lab</td>
-              <td>Furnitur</td>
-              <td>40</td>
-              <td>Rusak Ringan</td>
-            </tr>
-            <tr>
-              <td>BRG-004</td>
-              <td>Meja Dosen</td>
-              <td>Furnitur</td>
-              <td>6</td>
-              <td>Baik</td>
-            </tr>
-            <tr>
-              <td>BRG-005</td>
-              <td>Spidol Whiteboard</td>
-              <td>Alat Tulis</td>
-              <td>24</td>
-              <td>Rusak Berat</td>
-            </tr>
+            <?php foreach ($daftarBarang as $barang): ?>
+              <tr>
+                <td><?= htmlspecialchars($barang["kode_barang"]) ?></td>
+                <td><?= htmlspecialchars($barang["nama_barang"]) ?></td>
+                <td><?= htmlspecialchars($barang["nama_kategori"]) ?></td>
+                <td><?= (int) $barang["jumlah"] ?></td>
+                <td><?= htmlspecialchars($barang["kondisi"]) ?></td>
+              </tr>
+            <?php endforeach; ?>
           </tbody>
         </table>
       </div>
@@ -98,7 +86,7 @@ if (!isset($_SESSION["login"]) || $_SESSION["login"] !== true) {
         <div>
           <label for="kode">Kode Barang</label>
           <input type="text" id="kode" name="kode" placeholder="Contoh: BRG-006" required>
-          <span class="error" id="error-kode"></span> 
+          <span class="error" id="error-kode"></span>
         </div>
 
         <div>
@@ -110,9 +98,9 @@ if (!isset($_SESSION["login"]) || $_SESSION["login"] !== true) {
           <label for="kategori">Kategori</label>
           <select id="kategori" name="kategori" required>
             <option value="">-- Pilih kategori --</option>
-            <option value="1">Elektronik</option>
-            <option value="2">Furnitur</option>
-            <option value="3">Alat Tulis</option>
+            <?php foreach ($daftarKategori as $kat): ?>
+              <option value="<?= (int) $kat["id"] ?>"><?= htmlspecialchars($kat["nama_kategori"]) ?></option>
+            <?php endforeach; ?>
           </select>
         </div>
 
@@ -151,8 +139,8 @@ if (!isset($_SESSION["login"]) || $_SESSION["login"] !== true) {
     <p>&copy; 2026 SIM-Barang | Praktikum Pemrograman Web | Karima Febriyanti (062530801584)</p>
   </footer>
 
-  <div id="toast" class="toast" role="status"></div> 
+  <div id="toast" class="toast" role="status"></div>
 
-  <script src="main.js"></script> 
+  <script src="main.js"></script>
 </body>
 </html>

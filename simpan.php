@@ -4,22 +4,17 @@ if (!isset($_SESSION["login"]) || $_SESSION["login"] !== true) {
     header("Location: login.php");
     exit;
 }
-require_once "barang.php";
+
+require_once "koneksi.php";
+require_once "Barang.php";
+
 // ===== FUNGSI HITUNG TOTAL NILAI ASET =====
 function hitungTotalAset($jumlah, $harga)
 {
     return $jumlah * $harga;
 }
 
-// ===== DAFTAR KATEGORI (sama dengan value di dropdown) =====
-$daftarKategori = [
-    1 => "Elektronik",
-    2 => "Furnitur",
-    3 => "Alat Tulis",
-];
-
 $daftarKondisi = ["Baik", "Rusak Ringan", "Rusak Berat"];
-
 $error = [];
 $sukses = false;
 
@@ -44,9 +39,6 @@ if (!preg_match('/^BRG-\d+$/', $kode)) {
 if ($nama === "") {
     $error[] = "Nama barang tidak boleh kosong.";
 }
-if (!isset($daftarKategori[$idKategori])) {
-    $error[] = "Kategori tidak valid.";
-}
 if ($jumlah <= 0) {
     $error[] = "Jumlah harus lebih dari 0.";
 }
@@ -57,12 +49,35 @@ if (!in_array($kondisi, $daftarKondisi, true)) {
     $error[] = "Kondisi tidak valid.";
 }
 
-if (count($error) === 0) {
-    $sukses = true;
-    $namaKategori = $daftarKategori[$idKategori];
-    $totalAset = hitungTotalAset($jumlah, $harga);
+// Pastikan kategori benar-benar ada di database
+$namaKategori = "";
+$cek = $pdo->prepare("SELECT nama_kategori FROM kategori WHERE id = ?");
+$cek->execute([$idKategori]);
+$barisKategori = $cek->fetch();
+if ($barisKategori === false) {
+    $error[] = "Kategori tidak valid.";
+} else {
+    $namaKategori = $barisKategori["nama_kategori"];
+}
 
-    $barang = new Barang($kode, $nama, $jumlah);   // BARU
+// ===== SIMPAN KE DATABASE =====
+if (count($error) === 0) {
+    try {
+        $sql = "INSERT INTO barang (kode_barang, nama_barang, id_kategori, jumlah, harga, kondisi)
+                VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$kode, $nama, $idKategori, $jumlah, $harga, $kondisi]);
+
+        $sukses = true;
+        $totalAset = hitungTotalAset($jumlah, $harga);
+        $barang = new Barang($kode, $nama, $jumlah);
+    } catch (PDOException $e) {
+        if ($e->getCode() === "23000") {
+            $error[] = "Kode barang " . $kode . " sudah terdaftar. Gunakan kode lain.";
+        } else {
+            $error[] = "Data gagal disimpan ke database.";
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -85,39 +100,31 @@ if (count($error) === 0) {
       <h2>Hasil Pemrosesan Data</h2>
 
       <?php if ($sukses): ?>
-        <p class="pesan-sukses">Data barang berhasil diterima oleh server.</p>
+        <p class="pesan-sukses">Data barang berhasil disimpan ke database.</p>
         <p class="info-barang"><?= htmlspecialchars($barang->tampilkanInfo()) ?></p>
 
         <div class="tabel-wrapper">
           <table>
             <caption>Ringkasan barang yang diinputkan</caption>
+            <thead>
+              <tr>
+                <th scope="col">Kode</th>
+                <th scope="col">Nama Barang</th>
+                <th scope="col">Kategori</th>
+                <th scope="col">Jumlah</th>
+                <th scope="col">Harga Satuan</th>
+                <th scope="col">Kondisi</th>
+                <th scope="col">Total Nilai Aset</th>
+              </tr>
+            </thead>
             <tbody>
               <tr>
-                <th scope="row">Kode Barang</th>
                 <td><?= htmlspecialchars($kode) ?></td>
-              </tr>
-              <tr>
-                <th scope="row">Nama Barang</th>
                 <td><?= htmlspecialchars($nama) ?></td>
-              </tr>
-              <tr>
-                <th scope="row">Kategori</th>
                 <td><?= htmlspecialchars($namaKategori) ?></td>
-              </tr>
-              <tr>
-                <th scope="row">Jumlah</th>
-                <td><?= $jumlah ?> unit</td>
-              </tr>
-              <tr>
-                <th scope="row">Harga Satuan</th>
+                <td><?= $jumlah ?></td>
                 <td>Rp <?= number_format($harga, 0, ",", ".") ?></td>
-              </tr>
-              <tr>
-                <th scope="row">Kondisi</th>
                 <td><?= htmlspecialchars($kondisi) ?></td>
-              </tr>
-              <tr>
-                <th scope="row">Total Estimasi Nilai Aset</th>
                 <td><strong>Rp <?= number_format($totalAset, 0, ",", ".") ?></strong></td>
               </tr>
             </tbody>
