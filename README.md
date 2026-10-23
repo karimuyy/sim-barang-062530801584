@@ -1,11 +1,11 @@
 # SIM-Barang
 
-Sistem Informasi Manajemen Inventaris Barang Jurusan.
+Sistem Pengelolaan Inventaris Barang Jurusan.
 
 ## Identitas
-- Nama: ISI_NAMA_LENGKAP
+- Nama: Karima Febriyanti
 - NIM: 062530801584
-- Kelas: ISI_KELAS
+- Kelas: 3 IB
 - Mata Kuliah: Praktikum Pemrograman Web
 - Dosen Pengampu: Agus Setiawan, M.Kom.
 - Program Studi: D3 Manajemen Informatika, Politeknik Negeri Sriwijaya
