@@ -210,3 +210,44 @@ footer {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+/* ===== PENCARIAN ===== */
+.pencarian {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+/* ===== PESAN ERROR VALIDASI ===== */
+.error {
+  color: #b91c1c;
+  font-size: 0.85rem;
+}
+
+input.invalid {
+  border-color: #b91c1c;
+  background-color: #fef2f2;
+}
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #166534;
+  color: #ffffff;
+  padding: 0.75rem 1.25rem;
+  border-radius: 6px;
+  max-width: 90%;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s;
+}
+
+.toast.show {
+  opacity: 1;
+  visibility: visible;
+}

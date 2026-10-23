@@ -24,57 +24,63 @@
 
     <section id="inventaris">
       <h2>Tabel Inventaris Barang</h2>
-      <div class="tabel-wrapper"> 
-      <table>
-        <caption>Daftar barang laboratorium dan jurusan</caption>
-        <thead>
-          <tr>
-            <th scope="col">Kode</th>
-            <th scope="col">Nama Barang</th>
-            <th scope="col">Kategori</th>
-            <th scope="col">Jumlah</th>
-            <th scope="col">Kondisi</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>BRG-001</td>
-            <td>Proyektor</td>
-            <td>Elektronik</td>
-            <td>5</td>
-            <td>Baik</td>
-          </tr>
-          <tr>
-            <td>BRG-002</td>
-            <td>Komputer Desktop</td>
-            <td>Elektronik</td>
-            <td>30</td>
-            <td>Baik</td>
-          </tr>
-          <tr>
-            <td>BRG-003</td>
-            <td>Kursi Lab</td>
-            <td>Furnitur</td>
-            <td>40</td>
-            <td>Rusak Ringan</td>
-          </tr>
-          <tr>
-            <td>BRG-004</td>
-            <td>Meja Dosen</td>
-            <td>Furnitur</td>
-            <td>6</td>
-            <td>Baik</td>
-          </tr>
-          <tr>
-            <td>BRG-005</td>
-            <td>Spidol Whiteboard</td>
-            <td>Alat Tulis</td>
-            <td>24</td>
-            <td>Rusak Berat</td>
-          </tr>
-        </tbody>
-      </table>
-     </div>
+
+      <div class="pencarian"> <!-- BARU -->
+        <label for="cari">Cari barang</label>
+        <input type="search" id="cari" placeholder="Ketik kode, nama, kategori, atau kondisi...">
+      </div>
+
+      <div class="tabel-wrapper">
+        <table>
+          <caption>Daftar barang laboratorium dan jurusan</caption>
+          <thead>
+            <tr>
+              <th scope="col">Kode</th>
+              <th scope="col">Nama Barang</th>
+              <th scope="col">Kategori</th>
+              <th scope="col">Jumlah</th>
+              <th scope="col">Kondisi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>BRG-001</td>
+              <td>Proyektor</td>
+              <td>Elektronik</td>
+              <td>5</td>
+              <td>Baik</td>
+            </tr>
+            <tr>
+              <td>BRG-002</td>
+              <td>Komputer Desktop</td>
+              <td>Elektronik</td>
+              <td>30</td>
+              <td>Baik</td>
+            </tr>
+            <tr>
+              <td>BRG-003</td>
+              <td>Kursi Lab</td>
+              <td>Furnitur</td>
+              <td>40</td>
+              <td>Rusak Ringan</td>
+            </tr>
+            <tr>
+              <td>BRG-004</td>
+              <td>Meja Dosen</td>
+              <td>Furnitur</td>
+              <td>6</td>
+              <td>Baik</td>
+            </tr>
+            <tr>
+              <td>BRG-005</td>
+              <td>Spidol Whiteboard</td>
+              <td>Alat Tulis</td>
+              <td>24</td>
+              <td>Rusak Berat</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section id="form-barang">
@@ -84,6 +90,7 @@
         <div>
           <label for="kode">Kode Barang</label>
           <input type="text" id="kode" name="kode" placeholder="Contoh: BRG-006" required>
+          <span class="error" id="error-kode"></span> 
         </div>
 
         <div>
@@ -103,7 +110,8 @@
 
         <div>
           <label for="jumlah">Jumlah</label>
-          <input type="number" id="jumlah" name="jumlah" min="1" placeholder="Contoh: 10" required>
+          <input type="number" id="jumlah" name="jumlah" placeholder="Contoh: 10" required>
+          <span class="error" id="error-jumlah"></span>
         </div>
 
         <div>
@@ -121,7 +129,7 @@
           </select>
         </div>
 
-        <div class="aksi"> 
+        <div class="aksi">
           <button type="submit">Simpan Barang</button>
           <button type="reset">Reset</button>
         </div>
@@ -135,5 +143,8 @@
     <p>&copy; 2026 SIM-Barang | Praktikum Pemrograman Web | Karima Febriyanti (062530801584)</p>
   </footer>
 
+  <div id="toast" class="toast" role="status"></div> 
+
+  <script src="main.js"></script> 
 </body>
 </html>
