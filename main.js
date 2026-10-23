@@ -33,7 +33,8 @@ function tampilkanToast(pesan) {
 
 // ===== VALIDASI FORM SAAT SUBMIT =====
 form.addEventListener("submit", function (e) {
-  e.preventDefault(); // tahan dulu agar halaman tidak dimuat ulang
+  // Tahan dulu: periksa isian, dan beri waktu agar toast terlihat
+  e.preventDefault();
 
   let valid = true;
   const kode = inputKode.value.trim();
@@ -56,11 +57,16 @@ form.addEventListener("submit", function (e) {
     hapusError(inputJumlah, errorJumlah);
   }
 
-  // Jika semua aturan terpenuhi
-  if (valid) {
-    tampilkanToast("Data barang berhasil divalidasi!");
-    form.reset();
+  // Jika ada yang salah, berhenti di sini (form tidak dikirim)
+  if (!valid) {
+    return;
   }
+
+  // Jika semua benar: tampilkan toast, lalu kirim form ke simpan.php
+  tampilkanToast("Data valid, sedang dikirim...");
+  setTimeout(function () {
+    form.submit();
+  }, 1000);
 });
 
 // Pesan error hilang saat pengguna mulai memperbaiki isian

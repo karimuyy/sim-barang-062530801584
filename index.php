@@ -85,7 +85,7 @@
 
     <section id="form-barang">
       <h2>Formulir Input Barang</h2>
-      <form method="post">
+      <form action="simpan.php" method="post">
 
         <div>
           <label for="kode">Kode Barang</label>
