@@ -1,3 +1,17 @@
+/* ===== PALET WARNA ===== */
+:root {
+  --navy: #16324F;
+  --teal: #1F8A8A;
+  --bg: #E8F4F1;
+  --putih: #FFFFFF;
+
+  /* turunan untuk garis tepi dan efek hover */
+  --garis: #CFE5E0;
+  --teal-gelap: #176B6B;
+  --navy-terang: #24496D;
+  --merah: #B91C1C;
+}
+
 /* ===== RESET & BOX MODEL ===== */
 * {
   margin: 0;
@@ -8,14 +22,14 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
   line-height: 1.6;
-  background-color: #f3f4f6;
-  color: #1f2937;
+  background-color: var(--bg);
+  color: var(--navy);
 }
 
 /* ===== HEADER ===== */
 header {
-  background-color: #1e3a8a;
-  color: #ffffff;
+  background-color: var(--navy);
+  color: var(--putih);
   padding: 1.5rem 1rem;
   text-align: center;
 }
@@ -26,7 +40,7 @@ header h1 {
 
 /* ===== NAVIGASI (FLEXBOX) ===== */
 nav {
-  background-color: #1d4ed8;
+  background-color: var(--teal);
 }
 
 nav ul {
@@ -38,14 +52,14 @@ nav ul {
 nav a {
   display: block;
   padding: 0.75rem 1rem;
-  color: #ffffff;
+  color: var(--putih);
   text-decoration: none;
   text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 nav a:hover {
-  background-color: #2563eb;
+  background-color: var(--teal-gelap);
 }
 
 /* ===== MAIN (GRID) ===== */
@@ -57,8 +71,8 @@ main {
 }
 
 section {
-  background-color: #ffffff;
-  border: 1px solid #d1d5db;
+  background-color: var(--putih);
+  border: 1px solid var(--garis);
   border-radius: 8px;
   padding: 1rem;
 }
@@ -66,7 +80,9 @@ section {
 section h2 {
   margin-bottom: 1rem;
   font-size: 1.25rem;
-  color: #1e3a8a;
+  color: var(--navy);
+  padding-bottom: 0.4rem;
+  border-bottom: 3px solid var(--teal);
 }
 
 /* ===== TABEL ===== */
@@ -88,18 +104,22 @@ caption {
 
 th,
 td {
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--garis);
   padding: 0.5rem 0.75rem;
   text-align: left;
 }
 
 thead {
-  background-color: #1e3a8a;
-  color: #ffffff;
+  background-color: var(--navy);
+  color: var(--putih);
 }
 
 tbody tr:nth-child(even) {
-  background-color: #f9fafb;
+  background-color: var(--bg);
+}
+
+tbody tr:hover {
+  background-color: var(--garis);
 }
 
 /* ===== FORM (GRID) ===== */
@@ -123,15 +143,18 @@ input,
 select {
   width: 100%;
   padding: 0.5rem;
-  border: 1px solid #9ca3af;
+  border: 1px solid var(--teal);
   border-radius: 4px;
   font-size: 1rem;
+  color: var(--navy);
+  background-color: var(--putih);
 }
 
 input:focus,
 select:focus {
-  outline: 2px solid #2563eb;
-  border-color: #2563eb;
+  outline: 2px solid var(--teal);
+  outline-offset: 1px;
+  border-color: var(--navy);
 }
 
 form .aksi {
@@ -144,27 +167,28 @@ button {
   border: none;
   border-radius: 4px;
   font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
-  background-color: #1d4ed8;
-  color: #ffffff;
+  background-color: var(--teal);
+  color: var(--putih);
 }
 
 button:hover {
-  background-color: #1e40af;
+  background-color: var(--teal-gelap);
 }
 
 button[type="reset"] {
-  background-color: #6b7280;
+  background-color: var(--navy);
 }
 
 button[type="reset"]:hover {
-  background-color: #4b5563;
+  background-color: var(--navy-terang);
 }
 
 /* ===== FOOTER ===== */
 footer {
-  background-color: #1e3a8a;
-  color: #ffffff;
+  background-color: var(--navy);
+  color: var(--putih);
   text-align: center;
   padding: 1rem;
   font-size: 0.9rem;
@@ -221,13 +245,13 @@ footer {
 
 /* ===== PESAN ERROR VALIDASI ===== */
 .error {
-  color: #b91c1c;
+  color: var(--merah);
   font-size: 0.85rem;
 }
 
 input.invalid {
-  border-color: #b91c1c;
-  background-color: #fef2f2;
+  border-color: var(--merah);
+  background-color: #FEF2F2;
 }
 
 /* ===== TOAST ===== */
@@ -236,8 +260,9 @@ input.invalid {
   bottom: 1.5rem;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #166534;
-  color: #ffffff;
+  background-color: var(--navy);
+  color: var(--putih);
+  border-left: 5px solid var(--teal);
   padding: 0.75rem 1.25rem;
   border-radius: 6px;
   max-width: 90%;
@@ -251,30 +276,33 @@ input.invalid {
   opacity: 1;
   visibility: visible;
 }
+
 /* ===== HALAMAN HASIL (simpan.php) ===== */
 .pesan-sukses {
-  background-color: #dcfce7;
-  color: #166534;
-  border: 1px solid #86efac;
+  background-color: var(--bg);
+  color: var(--navy);
+  border: 1px solid var(--teal);
+  border-left: 5px solid var(--teal);
   border-radius: 6px;
   padding: 0.75rem 1rem;
   margin-bottom: 1rem;
 }
 
 .pesan-gagal {
-  color: #b91c1c;
+  color: var(--merah);
   font-weight: bold;
   margin-bottom: 0.5rem;
 }
 
 .daftar-error {
-  color: #b91c1c;
+  color: var(--merah);
   margin-left: 1.25rem;
   margin-bottom: 1rem;
 }
 
 table th[scope="row"] {
-  background-color: #e5e7eb;
+  background-color: var(--bg);
+  color: var(--navy);
   width: 40%;
 }
 
@@ -283,8 +311,25 @@ table th[scope="row"] {
 }
 
 .kembali a {
-  color: #1d4ed8;
+  color: var(--teal);
+  font-weight: bold;
 }
+
+.kembali a:hover {
+  color: var(--navy);
+}
+
+/* ===== INFO OBJEK BARANG ===== */
+.info-barang {
+  background-color: var(--bg);
+  border: 1px solid var(--garis);
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  color: var(--navy);
+}
+
 /* ===== HALAMAN LOGIN ===== */
 .halaman-login {
   max-width: 420px;
@@ -295,55 +340,46 @@ table th[scope="row"] {
   grid-template-columns: minmax(0, 1fr);
 }
 
-/* ===== INFO OBJEK BARANG ===== */
-.info-barang {
-  background-color: #eff6ff;
-  border: 1px solid #bfdbfe;
-  border-radius: 6px;
-  padding: 0.6rem 1rem;
-  margin-bottom: 1rem;
-  font-weight: bold;
-  color: #1e3a8a;
-}
-/* ===== TOMBOL HAPUS DI TABEL ===== */
-.form-hapus {
-  display: block;
-}
-
-.btn-hapus {
-  background-color: #b91c1c;
-  padding: 0.3rem 0.7rem;
-  font-size: 0.85rem;
-}
-
-.btn-hapus:hover {
-  background-color: #991b1b;
-}
-/* ===== TOMBOL EDIT ===== */
+/* ===== TOMBOL AKSI DI TABEL (Edit dan Hapus) ===== */
 .aksi-baris {
   display: flex;
   gap: 0.4rem;
   align-items: center;
 }
 
-.btn-edit {
-  display: inline-block;
-  background-color: #1d4ed8;
-  color: #ffffff;
+.form-hapus {
+  display: block;
+}
+
+.btn-hapus {
+  background-color: var(--merah);
   padding: 0.3rem 0.7rem;
   font-size: 0.85rem;
+}
+
+.btn-hapus:hover {
+  background-color: #991B1B;
+}
+
+.btn-edit {
+  display: inline-block;
+  background-color: var(--teal);
+  color: var(--putih);
+  padding: 0.3rem 0.7rem;
+  font-size: 0.85rem;
+  font-weight: bold;
   border-radius: 4px;
   text-decoration: none;
 }
 
 .btn-edit:hover {
-  background-color: #1e40af;
+  background-color: var(--teal-gelap);
 }
 
 .btn-batal {
-  background-color: #6b7280;
+  background-color: var(--navy);
 }
 
 .btn-batal:hover {
-  background-color: #4b5563;
+  background-color: var(--navy-terang);
 }
