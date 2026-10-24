@@ -7,7 +7,10 @@ if (!isset($_SESSION["login"]) || $_SESSION["login"] !== true) {
 
 require_once "koneksi.php";
 
-// Ambil data barang beserta nama kategorinya
+// Ambil pesan sukses (kalau ada), lalu hapus agar tampil sekali saja
+$flash = $_SESSION["flash"] ?? null;
+unset($_SESSION["flash"]);
+
 $stmt = $pdo->query(
     "SELECT b.kode_barang, b.nama_barang, k.nama_kategori, b.jumlah, b.kondisi
      FROM barang b
@@ -16,7 +19,6 @@ $stmt = $pdo->query(
 );
 $daftarBarang = $stmt->fetchAll();
 
-// Ambil daftar kategori untuk dropdown di form
 $daftarKategori = $pdo->query("SELECT id, nama_kategori FROM kategori ORDER BY id ASC")->fetchAll();
 ?>
 <!DOCTYPE html>
@@ -43,6 +45,13 @@ $daftarKategori = $pdo->query("SELECT id, nama_kategori FROM kategori ORDER BY i
   </nav>
 
   <main>
+
+    <?php if ($flash): ?>
+      <p class="pesan-sukses">
+        Data barang berhasil disimpan: <?= htmlspecialchars($flash["info"]) ?>.
+        Total nilai aset: Rp <?= number_format($flash["total"], 0, ",", ".") ?>
+      </p>
+    <?php endif; ?>
 
     <section id="inventaris">
       <h2>Tabel Inventaris Barang</h2>

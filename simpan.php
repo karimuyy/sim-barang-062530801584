@@ -6,9 +6,8 @@ if (!isset($_SESSION["login"]) || $_SESSION["login"] !== true) {
 }
 
 require_once "koneksi.php";
-require_once "Barang.php";
+require_once "barang.php";
 
-// ===== FUNGSI HITUNG TOTAL NILAI ASET =====
 function hitungTotalAset($jumlah, $harga)
 {
     return $jumlah * $harga;
@@ -16,7 +15,6 @@ function hitungTotalAset($jumlah, $harga)
 
 $daftarKondisi = ["Baik", "Rusak Ringan", "Rusak Berat"];
 $error = [];
-$sukses = false;
 
 // Hanya proses kalau halaman dibuka lewat pengiriman form (POST)
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
@@ -24,7 +22,6 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     exit;
 }
 
-// ===== TANGKAP DATA DARI $_POST =====
 $kode       = trim($_POST["kode"] ?? "");
 $nama       = trim($_POST["nama"] ?? "");
 $idKategori = (int) ($_POST["kategori"] ?? 0);
@@ -32,7 +29,6 @@ $jumlah     = (int) ($_POST["jumlah"] ?? 0);
 $harga      = (float) ($_POST["harga"] ?? 0);
 $kondisi    = trim($_POST["kondisi"] ?? "");
 
-// ===== VALIDASI SISI SERVER =====
 if (!preg_match('/^BRG-\d+$/', $kode)) {
     $error[] = "Kode barang harus diawali BRG- diikuti angka.";
 }
@@ -49,28 +45,28 @@ if (!in_array($kondisi, $daftarKondisi, true)) {
     $error[] = "Kondisi tidak valid.";
 }
 
-// Pastikan kategori benar-benar ada di database
-$namaKategori = "";
-$cek = $pdo->prepare("SELECT nama_kategori FROM kategori WHERE id = ?");
+$cek = $pdo->prepare("SELECT id FROM kategori WHERE id = ?");
 $cek->execute([$idKategori]);
-$barisKategori = $cek->fetch();
-if ($barisKategori === false) {
+if ($cek->fetch() === false) {
     $error[] = "Kategori tidak valid.";
-} else {
-    $namaKategori = $barisKategori["nama_kategori"];
 }
 
-// ===== SIMPAN KE DATABASE =====
 if (count($error) === 0) {
     try {
-        $sql = "INSERT INTO barang (kode_barang, nama_barang, id_kategori, jumlah, harga, kondisi)
-                VALUES (?, ?, ?, ?, ?, ?)";
-        $stmt = $pdo->prepare($sql);
+        $stmt = $pdo->prepare(
+            "INSERT INTO barang (kode_barang, nama_barang, id_kategori, jumlah, harga, kondisi)
+             VALUES (?, ?, ?, ?, ?, ?)"
+        );
         $stmt->execute([$kode, $nama, $idKategori, $jumlah, $harga, $kondisi]);
 
-        $sukses = true;
-        $totalAset = hitungTotalAset($jumlah, $harga);
+        // Simpan pesan sukses di session, lalu pindah ke halaman utama
         $barang = new Barang($kode, $nama, $jumlah);
+        $_SESSION["flash"] = [
+            "info"  => $barang->tampilkanInfo(),
+            "total" => hitungTotalAset($jumlah, $harga),
+        ];
+        header("Location: index.php");
+        exit;
     } catch (PDOException $e) {
         if ($e->getCode() === "23000") {
             $error[] = "Kode barang " . $kode . " sudah terdaftar. Gunakan kode lain.";
@@ -97,49 +93,12 @@ if (count($error) === 0) {
 
   <main>
     <section>
-      <h2>Hasil Pemrosesan Data</h2>
-
-      <?php if ($sukses): ?>
-        <p class="pesan-sukses">Data barang berhasil disimpan ke database.</p>
-        <p class="info-barang"><?= htmlspecialchars($barang->tampilkanInfo()) ?></p>
-
-        <div class="tabel-wrapper">
-          <table>
-            <caption>Ringkasan barang yang diinputkan</caption>
-            <thead>
-              <tr>
-                <th scope="col">Kode</th>
-                <th scope="col">Nama Barang</th>
-                <th scope="col">Kategori</th>
-                <th scope="col">Jumlah</th>
-                <th scope="col">Harga Satuan</th>
-                <th scope="col">Kondisi</th>
-                <th scope="col">Total Nilai Aset</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><?= htmlspecialchars($kode) ?></td>
-                <td><?= htmlspecialchars($nama) ?></td>
-                <td><?= htmlspecialchars($namaKategori) ?></td>
-                <td><?= $jumlah ?></td>
-                <td>Rp <?= number_format($harga, 0, ",", ".") ?></td>
-                <td><?= htmlspecialchars($kondisi) ?></td>
-                <td><strong>Rp <?= number_format($totalAset, 0, ",", ".") ?></strong></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-      <?php else: ?>
-        <p class="pesan-gagal">Data tidak dapat diproses:</p>
-        <ul class="daftar-error">
-          <?php foreach ($error as $pesan): ?>
-            <li><?= htmlspecialchars($pesan) ?></li>
-          <?php endforeach; ?>
-        </ul>
-      <?php endif; ?>
-
+      <h2>Data Tidak Dapat Diproses</h2>
+      <ul class="daftar-error">
+        <?php foreach ($error as $pesan): ?>
+          <li><?= htmlspecialchars($pesan) ?></li>
+        <?php endforeach; ?>
+      </ul>
       <p class="kembali"><a href="index.php">&laquo; Kembali ke halaman utama</a></p>
     </section>
   </main>
