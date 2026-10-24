@@ -84,11 +84,14 @@ $daftarKategori = $pdo->query("SELECT id, nama_kategori FROM kategori ORDER BY i
                 <td><?= (int) $barang["jumlah"] ?></td>
                 <td><?= htmlspecialchars($barang["kondisi"]) ?></td>
                 <td>
-                  <form class="form-hapus" action="hapus.php" method="post"
+                  <div class="aksi-baris">
+                    <a href="edit.php?id=<?= (int) $barang["id"] ?>" class="btn-edit">Edit</a>
+                    <form class="form-hapus" action="hapus.php" method="post"
                         onsubmit="return confirm('Yakin ingin menghapus barang ini?');">
-                    <input type="hidden" name="id" value="<?= (int) $barang["id"] ?>">
-                    <button type="submit" class="btn-hapus">Hapus</button>
-                  </form>
+                      <input type="hidden" name="id" value="<?= (int) $barang["id"] ?>">
+                      <button type="submit" class="btn-hapus">Hapus</button>
+                    </form>
+                  </div>
                 </td>
               </tr>
             <?php endforeach; ?>

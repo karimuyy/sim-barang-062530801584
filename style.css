@@ -319,3 +319,31 @@ table th[scope="row"] {
 .btn-hapus:hover {
   background-color: #991b1b;
 }
+/* ===== TOMBOL EDIT ===== */
+.aksi-baris {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.btn-edit {
+  display: inline-block;
+  background-color: #1d4ed8;
+  color: #ffffff;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.btn-edit:hover {
+  background-color: #1e40af;
+}
+
+.btn-batal {
+  background-color: #6b7280;
+}
+
+.btn-batal:hover {
+  background-color: #4b5563;
+}
