@@ -10,8 +10,13 @@ require_once "koneksi.php";
 // Ringkasan input terakhir sudah tidak diperlukan setelah kembali ke halaman utama
 unset($_SESSION["ringkasan"]);
 
+// Pesan singkat (misalnya setelah menghapus), tampil sekali saja
+$pesan = $_SESSION["pesan"] ?? null;
+unset($_SESSION["pesan"]);
+
+// BARU: b.id ikut diambil, dipakai oleh tombol Hapus
 $stmt = $pdo->query(
-    "SELECT b.kode_barang, b.nama_barang, k.nama_kategori, b.jumlah, b.kondisi
+    "SELECT b.id, b.kode_barang, b.nama_barang, k.nama_kategori, b.jumlah, b.kondisi
      FROM barang b
      JOIN kategori k ON b.id_kategori = k.id
      ORDER BY b.id ASC"
@@ -45,6 +50,10 @@ $daftarKategori = $pdo->query("SELECT id, nama_kategori FROM kategori ORDER BY i
 
   <main>
 
+    <?php if ($pesan): ?>
+      <p class="pesan-sukses"><?= htmlspecialchars($pesan) ?></p>
+    <?php endif; ?>
+
     <section id="inventaris">
       <h2>Tabel Inventaris Barang</h2>
 
@@ -63,6 +72,7 @@ $daftarKategori = $pdo->query("SELECT id, nama_kategori FROM kategori ORDER BY i
               <th scope="col">Kategori</th>
               <th scope="col">Jumlah</th>
               <th scope="col">Kondisi</th>
+              <th scope="col">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -73,6 +83,13 @@ $daftarKategori = $pdo->query("SELECT id, nama_kategori FROM kategori ORDER BY i
                 <td><?= htmlspecialchars($barang["nama_kategori"]) ?></td>
                 <td><?= (int) $barang["jumlah"] ?></td>
                 <td><?= htmlspecialchars($barang["kondisi"]) ?></td>
+                <td>
+                  <form class="form-hapus" action="hapus.php" method="post"
+                        onsubmit="return confirm('Yakin ingin menghapus barang ini?');">
+                    <input type="hidden" name="id" value="<?= (int) $barang["id"] ?>">
+                    <button type="submit" class="btn-hapus">Hapus</button>
+                  </form>
+                </td>
               </tr>
             <?php endforeach; ?>
           </tbody>
